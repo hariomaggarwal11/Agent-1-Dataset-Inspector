@@ -82,8 +82,8 @@ def _render_overview(report):
 
     # Metadata table
     st.subheader("Dataset Metadata")
-    meta_df = pd.DataFrame(list(metadata.items()), columns=["Field", "Value"])
-    st.dataframe(meta_df, use_container_width=True, hide_index=True)
+    meta_df = pd.DataFrame([(k, str(v)) for k, v in metadata.items()], columns=["Field", "Value"])
+    st.dataframe(meta_df, width="stretch", hide_index=True)
 
     # Known dataset info
     known = report.get("known_dataset")
@@ -105,7 +105,7 @@ def _render_channels(report):
         return
 
     st.subheader("\U0001f4e1 Channel Information")
-    st.dataframe(channel_info, use_container_width=True, hide_index=True)
+    st.dataframe(channel_info, width="stretch", hide_index=True)
 
     # Reference scheme
     ref = report.get("metadata", {}).get("Reference Scheme", "Unknown")
@@ -138,7 +138,7 @@ def _render_events(report):
 
     summary_df = events.get("summary_df")
     if summary_df is not None:
-        st.dataframe(summary_df, use_container_width=True, hide_index=True)
+        st.dataframe(summary_df, width="stretch", hide_index=True)
 
         # Timeline visualization
         events_array = events.get("events_array")
@@ -168,7 +168,7 @@ def _render_events(report):
                 plot_bgcolor="rgba(17,24,39,1)",
                 font=dict(color="#f1f5f9"),
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
 
 def _render_frequency(report):
@@ -211,7 +211,7 @@ def _render_frequency(report):
         plot_bgcolor="rgba(17,24,39,1)",
         font=dict(color="#f1f5f9"),
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Band power table
     st.subheader("Relative Band Power (%)")
@@ -220,7 +220,7 @@ def _render_frequency(report):
         band_powers.index = ch_names[:len(band_powers)]
         band_powers.index.name = "Channel"
         st.dataframe(band_powers.style.background_gradient(cmap="YlOrRd", axis=1),
-                     use_container_width=True)
+                     width="stretch")
 
     # FAA
     faa = report.get("faa", {})
@@ -281,7 +281,7 @@ def _render_artifacts(report):
                     font=dict(color="#f1f5f9"),
                     showlegend=True,
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
             except Exception as e:
                 st.warning(f"Could not render signal preview: {e}")
 
@@ -321,7 +321,7 @@ def _render_topography(report):
                 plot_bgcolor="rgba(17,24,39,1)",
                 font=dict(color="#f1f5f9"),
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
         except Exception as e:
             st.warning(f"Could not compute correlation: {e}")
 
@@ -338,7 +338,7 @@ def _render_quality(report):
 
     # Gauge
     fig = render_quality_gauge(quality["score"])
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # Breakdown
     st.markdown("### Score Breakdown")

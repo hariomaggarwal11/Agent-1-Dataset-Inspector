@@ -80,8 +80,8 @@ def _render_overview(report):
     st.markdown("---")
 
     st.subheader("Dataset Metadata")
-    meta_df = pd.DataFrame(list(metadata.items()), columns=["Field", "Value"])
-    st.dataframe(meta_df, use_container_width=True, hide_index=True)
+    meta_df = pd.DataFrame([(k, str(v)) for k, v in metadata.items()], columns=["Field", "Value"])
+    st.dataframe(meta_df, width="stretch", hide_index=True)
 
     known = report.get("known_dataset")
     if known:
@@ -101,7 +101,7 @@ def _render_leads(report):
         return
 
     st.subheader("\U0001fac0 Lead Information")
-    st.dataframe(lead_info, use_container_width=True, hide_index=True)
+    st.dataframe(lead_info, width="stretch", hide_index=True)
 
     # Multi-lead signal preview
     ecg_data = report.get("ecg_data")
@@ -135,7 +135,7 @@ def _render_leads(report):
             plot_bgcolor="rgba(17,24,39,1)",
             font=dict(color="#f1f5f9"),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
 
 def _render_annotations(report):
@@ -153,14 +153,14 @@ def _render_annotations(report):
     beat_summary = ann.get("beat_summary")
     if beat_summary is not None:
         st.markdown("### Beat Type Summary")
-        st.dataframe(beat_summary, use_container_width=True, hide_index=True)
+        st.dataframe(beat_summary, width="stretch", hide_index=True)
         st.caption(f"Total annotations: {ann.get('total_annotations', 0)}")
 
     # Annotation table (first 100)
     annotation_df = ann.get("annotation_df")
     if annotation_df is not None:
         with st.expander("Detailed Annotation Table (first 100)"):
-            st.dataframe(annotation_df.head(100), use_container_width=True, hide_index=True)
+            st.dataframe(annotation_df.head(100), width="stretch", hide_index=True)
 
 
 def _render_signal_quality(report):
@@ -172,7 +172,7 @@ def _render_signal_quality(report):
         return
 
     st.subheader("\U0001f493 Per-Lead Signal Quality")
-    st.dataframe(quality_df, use_container_width=True, hide_index=True)
+    st.dataframe(quality_df, width="stretch", hide_index=True)
 
     with st.expander("\u2139\ufe0f Quality Index Interpretation"):
         st.markdown("""
@@ -235,7 +235,7 @@ def _render_rpeaks(report):
              "Normal Range": _get_hrv_normal(k)}
             for k, v in hrv.items()
         ])
-        st.dataframe(hrv_df, use_container_width=True, hide_index=True)
+        st.dataframe(hrv_df, width="stretch", hide_index=True)
 
     # RR Interval plot
     rr = rpeaks.get("rr_intervals")
@@ -257,7 +257,7 @@ def _render_rpeaks(report):
             plot_bgcolor="rgba(17,24,39,1)",
             font=dict(color="#f1f5f9"),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         # Poincare plot
         if len(rr) > 2:
@@ -281,7 +281,7 @@ def _render_rpeaks(report):
                 plot_bgcolor="rgba(17,24,39,1)",
                 font=dict(color="#f1f5f9"),
             )
-            st.plotly_chart(fig2, use_container_width=True)
+            st.plotly_chart(fig2, width="stretch")
 
 
 def _get_hrv_normal(metric_name):
@@ -306,7 +306,7 @@ def _render_quality(report):
     st.subheader("\U0001f4ca Data Quality Score")
 
     fig = render_quality_gauge(quality["score"])
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.markdown("### Score Breakdown")
     for item, pts in quality["breakdown"]:
